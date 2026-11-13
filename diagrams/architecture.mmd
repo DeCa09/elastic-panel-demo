@@ -1,0 +1,27 @@
+%% Same architecture as architecture.svg, as Mermaid (renders on GitHub and in most Markdown tools).
+flowchart LR
+  subgraph K8S["Gipfelkorb Kubernetes (web shop)"]
+    APP["Shop microservices<br/>OpenTelemetry + EDOT SDKs"]
+    COL["EDOT Collector (Elastic Agent)<br/>receive, enrich, batch, export"]
+    APP -->|"OTLP: logs, metrics, traces"| COL
+  end
+  subgraph ELASTIC["Elastic Cloud: Elastic Observability"]
+    MOTLP["① Managed OTLP endpoint<br/>stores OpenTelemetry format natively"]
+    ES["Elasticsearch<br/>one store for all three signals, ES|QL"]
+    APM["Applications (APM)<br/>service map, traces, correlated logs"]
+    ALERT["② SLOs and alerting<br/>threshold + burn rate rules, connectors"]
+    AI["③ AI Agent<br/>'Investigate this alert'"]
+    DASH["④ Dashboards<br/>checkouts, revenue at risk, SLO status"]
+    MOTLP --> ES
+    ES --> APM & ALERT & AI & DASH
+  end
+  subgraph PEOPLE["People"]
+    SLACK["Slack #shop-alerts<br/>(or Microsoft Teams)"]
+    SRE["SRE team"]
+    BIZ["Business owners"]
+  end
+  COL -->|"OTLP over HTTPS + API key"| MOTLP
+  ALERT -->|"Slack connector"| SLACK
+  SRE --> APM
+  SRE --> AI
+  BIZ --> DASH

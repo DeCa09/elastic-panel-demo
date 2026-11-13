@@ -1,0 +1,127 @@
+# Local Elastic stack for testing the setup scripts without Elastic Cloud.
+# Plan B environment only. The interview demo runs on Elastic Cloud (see SETUP.md).
+# Modelled on Elastic's start-local (github.com/elastic/start-local) with --edot.
+# Images come from Docker Hub (elastic/*); docker.elastic.co/* works the same way.
+name: elastic-start-local
+
+configs:
+  edot-collector-config:
+    content: |
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      connectors:
+        elasticapm: {}
+      processors:
+        batch:
+          send_batch_size: 1000
+          timeout: 1s
+          send_batch_max_size: 1500
+        batch/metrics:
+          send_batch_max_size: 0
+          timeout: 1s
+        elasticapm: {}
+      exporters:
+        elasticsearch/otel:
+          endpoints:
+            - http://elasticsearch:9200
+          user: elastic
+          password: ${ES_LOCAL_PASSWORD}
+          mapping:
+            mode: otel
+      service:
+        pipelines:
+          metrics:
+            receivers: [otlp]
+            processors: [batch/metrics]
+            exporters: [elasticsearch/otel]
+          logs:
+            receivers: [otlp]
+            processors: [batch]
+            exporters: [elasticapm, elasticsearch/otel]
+          traces:
+            receivers: [otlp]
+            processors: [batch, elasticapm]
+            exporters: [elasticapm, elasticsearch/otel]
+          metrics/aggregated-otel-metrics:
+            receivers: [elasticapm]
+            processors: []
+            exporters: [elasticsearch/otel]
+
+services:
+  elasticsearch:
+    image: elastic/elasticsearch:${ES_LOCAL_VERSION:-9.5.6}
+    container_name: es-local
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=${ES_LOCAL_PASSWORD}
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - xpack.license.self_generated.type=trial
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+    ports:
+      - "127.0.0.1:9200:9200"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -u elastic:${ES_LOCAL_PASSWORD} http://localhost:9200 >/dev/null"]
+      interval: 5s
+      retries: 60
+
+  kibana-settings:
+    image: elastic/elasticsearch:${ES_LOCAL_VERSION:-9.5.6}
+    container_name: kibana-settings-local
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    restart: "no"
+    command: >
+      bash -c 'until curl -s -u "elastic:${ES_LOCAL_PASSWORD}"
+      -X POST http://elasticsearch:9200/_security/user/kibana_system/_password
+      -d "{\"password\":\"${KIBANA_LOCAL_PASSWORD}\"}"
+      -H "Content-Type: application/json" | grep -q "^{}"; do sleep 3; done'
+
+  kibana:
+    image: elastic/kibana:${ES_LOCAL_VERSION:-9.5.6}
+    container_name: kibana-local
+    depends_on:
+      kibana-settings:
+        condition: service_completed_successfully
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_LOCAL_PASSWORD}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${KIBANA_ENCRYPTION_KEY}
+      - XPACK_SECURITY_ENCRYPTIONKEY=${KIBANA_ENCRYPTION_KEY}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${KIBANA_ENCRYPTION_KEY}
+      - SERVER_PUBLICBASEURL=http://localhost:5601
+    ports:
+      - "127.0.0.1:5601:5601"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'"]
+      interval: 10s
+      retries: 60
+
+  edot-collector:
+    image: elastic/elastic-agent:${ES_LOCAL_VERSION:-9.5.6}
+    container_name: edot-collector
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ELASTIC_AGENT_OTEL=true
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    configs:
+      - source: edot-collector-config
+        target: /etc/otelcol-contrib/config.yaml
+    ports:
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
+
+volumes:
+  es-data:

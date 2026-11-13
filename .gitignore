@@ -1,0 +1,14 @@
+.env
+**/.env
+!.env.example
+opentelemetry-demo/
+recordings/
+*.mp4
+*.mov
+.DS_Store
+__pycache__/
+.venv/
+.terraform/
+*.tfstate*
+local-stack/demo.env
+local-stack/up.log
