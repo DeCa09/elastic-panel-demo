@@ -1,6 +1,6 @@
 # Elastic panel demo kit
 
-Everything for the Elastic Solutions Architect panel interview (week of 23 November 2026): a live Elastic Observability demo you can break and reset, a 12-minute runbook, a deck outline, an architecture diagram, and Q&A preparation.
+Everything for the Elastic Solutions Architect panel interview (**Tuesday 24 November 2026, 13:00 to 14:00 CET**): a live Elastic Observability demo you can break and reset, a 12-minute runbook, a deck outline, an architecture diagram, and Q&A preparation.
 
 **Story:** an online shop slows down → an alert reaches Slack through Elastic's native connector → the Elastic AI Agent finds the root cause across logs, metrics and traces → the business impact is visible in francs.
 
@@ -12,7 +12,7 @@ Everything for the Elastic Solutions Architect panel interview (week of 23 Novem
 | `SETUP.md` | Step by step from zero to a working demo. |
 | `RUNBOOK.md` | The 12-minute demo, minute by minute, with talk track, German terms and AI prompts. |
 | `FALLBACK.md` | What to do when something fails live. How to record the backups. |
-| `DECK.md` | 10-slide outline with speaker notes, timings and the value table. |
+| `DECK.md` | 10-slide outline with speaker notes, timings and the value table. The built slides are a private Slides artifact: https://claude.ai/artifact/SqnLDs9bDSWbPbnWu1Aon5 |
 | `QA_PREP.md` | Likely questions per panel role, competitor answers, customer stories, land and expand. |
 | `diagrams/architecture.svg` | Architecture diagram for slide 4 (`.mmd` is the same as Mermaid). |
 | `SOURCES.md` | Every product fact with its source and how well it is verified. |
@@ -28,7 +28,7 @@ Everything for the Elastic Solutions Architect panel interview (week of 23 Novem
 
 | Topic | Recommendation | Why |
 |---|---|---|
-| Trial start | **Monday 16 November 2026** | The trial lasts 14 days. Starting on the 16th covers the whole week of 23 to 27 November with 3 days of margin and leaves a week to rehearse. Rehearse on the local stack before that. |
+| Trial start | **Monday 16 November 2026** | The trial lasts 14 days. Starting on the 16th puts the interview on day 9, with 6 days of margin and 8 days to rehearse. Rehearse on the local stack before that. |
 | Hosted or Serverless | **Serverless, Observability project, "Observability Complete" tier**, EU region | Nothing to size. Always the current version, so the AI Agent with "Add to chat" on alerts is available (on Hosted that needs stack 9.6+). Managed OTLP endpoint, SLOs, connectors and the Elastic Managed LLM are included. The trial allows three projects, so you have a spare. |
 | When Hosted is better | As the production answer in Q&A | Hosted has an AWS Zurich region. Serverless has no Swiss region today. |
 | Slack or Teams | Slack | Fastest to set up. The Teams variant is documented in `SETUP.md` step 4. |

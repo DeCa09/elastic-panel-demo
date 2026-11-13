@@ -23,11 +23,11 @@ From nothing to a working demo. Plan 2 to 3 hours the first time, most of it wai
 
 ## 1. When to start the trial
 
-The trial lasts **14 days** and the interview date is not confirmed yet (week of 23 to 27 November 2026).
+The trial lasts **14 days**. The interview is on **Tuesday 24 November 2026, 13:00 to 14:00 CET**.
 
-**Recommended: create the Elastic Cloud account on Monday 16 November 2026.** The trial then runs until about Monday 30 November. That covers every day of the interview week with at least 3 days of margin, and gives you 7 days to rehearse on the real environment.
+**Recommended: create the Elastic Cloud account on Monday 16 November 2026.** The trial then runs until about Monday 30 November. The interview falls on day 9, with 6 days of margin, and you get 8 days to rehearse on the real environment.
 
-- Do not start today (13 November). The trial would end on 27 November, the last possible interview day, with no margin.
+- Starting this weekend also works (the trial would end around 27 to 29 November). Do not start later than Wednesday 18 November: you need the days to fix what is untested.
 - Until the 16th, rehearse on the local stack (step 11). It is free and uses the same scripts.
 - If the interview moves to 30 November or later, tell me. Options are a second trial with another email address, or asking Elastic for an extension (not documented, so ask your recruiter). Do not subscribe: that costs money.
 

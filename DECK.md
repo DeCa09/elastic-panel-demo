@@ -262,4 +262,4 @@ Customer numbers on slide 7 (PepsiCo, Oney Bank, Italian gas distributor) are **
 
 ## Slides as a file
 
-This is the outline. If you want the actual slides (PowerPoint, Google Slides or a web deck), tell me and I will build them from this file and the SVG.
+The slides are built: https://claude.ai/artifact/SqnLDs9bDSWbPbnWu1Aon5 (private; 9 presented slides, then 3 appendix slides; speaker notes included; it can be downloaded as PowerPoint or PDF). Replace the four `[... name]` placeholders on slide 1 once you know the panel.

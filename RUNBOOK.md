@@ -1,5 +1,7 @@
 # Demo runbook: 12 minutes
 
+**Session:** Tuesday 24 November 2026, 13:00 to 14:00 CET. Preflight at 12:30 and 12:55. Pre-trigger the backup alert at 12:40 (`FALLBACK.md`).
+
 **Story in one sentence:** the shop slows down, Elastic alerts the on-call engineer in Slack within about a minute, the AI Agent finds the root cause across traces, logs and metrics, and the business sees what it costs.
 
 **The failure:** `productCatalogLockContention`. The product database gets an exclusive lock. Product pages hang for up to 30 seconds. It looks like a bad migration or a runaway batch job on Black Friday.
